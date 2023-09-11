@@ -76,6 +76,9 @@ type FakeSysFs struct {
 	hugePagesNr    map[string]string
 	hugePagesNrErr error
 
+	distances    map[string]string
+	distancesErr error
+
 	onlineCPUs map[string]interface{}
 }
 
@@ -123,6 +126,10 @@ func (fs *FakeSysFs) GetBlockDeviceScheduler(name string) (string, error) {
 
 func (fs *FakeSysFs) GetBlockDeviceNumbers(name string) (string, error) {
 	return "8:0\n", nil
+}
+
+func (fs *FakeSysFs) IsBlockDeviceHidden(name string) (bool, error) {
+	return false, nil
 }
 
 func (fs *FakeSysFs) GetNetworkDevices() ([]os.FileInfo, error) {
@@ -199,6 +206,27 @@ func (fs *FakeSysFs) SetEntryName(name string) {
 
 func (fs *FakeSysFs) GetSystemUUID() (string, error) {
 	return "1F862619-BA9F-4526-8F85-ECEAF0C97430", nil
+}
+
+func (fs *FakeSysFs) GetDistances(nodeDir string) (string, error) {
+	if fs.distancesErr != nil {
+		return "", fs.distancesErr
+	}
+
+	if _, ok := fs.distances[nodeDir]; !ok {
+		return "", fmt.Errorf("distance not found")
+	}
+
+	return fs.distances[nodeDir], nil
+}
+
+func (fs *FakeSysFs) SetDistances(nodeDir string, distances string, err error) {
+	if fs.distances == nil {
+		fs.distances = map[string]string{nodeDir: distances}
+	} else {
+		fs.distances[nodeDir] = distances
+	}
+	fs.distancesErr = err
 }
 
 func (fs *FakeSysFs) IsCPUOnline(dir string) bool {

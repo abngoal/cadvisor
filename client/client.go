@@ -14,7 +14,9 @@
 
 // This is an implementation of a cAdvisor REST API in Go.
 // To use it, create a client (replace the URL with your actual cAdvisor REST endpoint):
-//   client, err := client.NewClient("http://192.168.59.103:8080/")
+//
+//	client, err := client.NewClient("http://192.168.59.103:8080/")
+//
 // Then, the client interface exposes go methods corresponding to the REST endpoints.
 package client
 
@@ -23,7 +25,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"path"
 	"strings"
@@ -185,7 +186,7 @@ func (c *Client) httpGetJSONData(data, postData interface{}, url, infoName strin
 		return fmt.Errorf("received empty response for %q from %q", infoName, url)
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		err = fmt.Errorf("unable to read all %q from %q: %v", infoName, url, err)
 		return err

@@ -59,11 +59,11 @@ type Framework interface {
 //
 // Typical use:
 //
-// func TestFoo(t *testing.T) {
-// 	fm := framework.New(t)
-// 	defer fm.Cleanup()
-//      ... actual test ...
-// }
+//	func TestFoo(t *testing.T) {
+//		fm := framework.New(t)
+//		defer fm.Cleanup()
+//	     ... actual test ...
+//	}
 func New(t *testing.T) Framework {
 	// All integration tests are large.
 	if testing.Short() {
@@ -213,14 +213,14 @@ func (f *realFramework) ClientV2() *v2.Client {
 
 func (a dockerActions) RunPause() string {
 	return a.Run(DockerRunArgs{
-		Image: "kubernetes/pause",
+		Image: "registry.k8s.io/pause",
 	})
 }
 
 // Run the specified command in a Docker busybox container.
 func (a dockerActions) RunBusybox(cmd ...string) string {
 	return a.Run(DockerRunArgs{
-		Image: "busybox",
+		Image: "registry.k8s.io/busybox",
 	}, cmd...)
 }
 
@@ -240,7 +240,8 @@ type DockerRunArgs struct {
 //
 // e.g.:
 // RunDockerContainer(DockerRunArgs{Image: "busybox"}, "ping", "www.google.com")
-//   -> docker run busybox ping www.google.com
+//
+//	-> docker run busybox ping www.google.com
 func (a dockerActions) Run(args DockerRunArgs, cmd ...string) string {
 	dockerCommand := append(append([]string{"docker", "run", "-d"}, args.Args...), args.Image)
 	dockerCommand = append(dockerCommand, cmd...)

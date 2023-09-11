@@ -13,16 +13,9 @@
 # limitations under the License.
 
 GO := go
-GOLANGCI_VER := v1.45.2
+GOLANGCI_VER := v1.54.1
 GO_TEST ?= $(GO) test $(or $(GO_FLAGS),-race)
 arch ?= $(shell go env GOARCH)
-
-ifeq ($(arch), amd64)
-  Dockerfile_tag := ''
-else
-  Dockerfile_tag := '.''$(arch)'
-endif
-
 
 all: presubmit build test
 
@@ -76,10 +69,10 @@ release:
 	@./build/release.sh
 
 docker-%:
-	@docker build -t cadvisor:$(shell git rev-parse --short HEAD) -f deploy/Dockerfile$(Dockerfile_tag) .
+	@docker build -t cadvisor:$(shell git rev-parse --short HEAD) -f deploy/Dockerfile .
 
 docker-build:
-	@docker run --rm -w /go/src/github.com/google/cadvisor -v ${PWD}:/go/src/github.com/google/cadvisor golang:1.18 make build
+	@docker run --rm -w /go/src/github.com/google/cadvisor -v ${PWD}:/go/src/github.com/google/cadvisor golang:1.20 make build
 
 presubmit: lint
 	@echo ">> checking go mod tidy"
@@ -99,5 +92,6 @@ lint:
 
 clean:
 	@rm -f *.test cadvisor
+	@rm -rf _output/
 
 .PHONY: all build docker format release test test-integration lint presubmit tidy

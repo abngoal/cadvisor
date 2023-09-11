@@ -45,6 +45,12 @@ machine_dimm_count{boot_id="boot-id-test",machine_id="machine-id-test",system_uu
 # HELP machine_memory_bytes Amount of memory installed on the machine.
 # TYPE machine_memory_bytes gauge
 machine_memory_bytes{boot_id="boot-id-test",machine_id="machine-id-test",system_uuid="system-uuid-test"} 1024 1395066363000
+# HELP machine_node_distance Distance between NUMA node and target NUMA node.
+# TYPE machine_node_distance gauge
+machine_node_distance{boot_id="boot-id-test",machine_id="machine-id-test",node_id="0",system_uuid="system-uuid-test",target_node_id="0"} 10 1395066363000
+machine_node_distance{boot_id="boot-id-test",machine_id="machine-id-test",node_id="0",system_uuid="system-uuid-test",target_node_id="1"} 12 1395066363000
+machine_node_distance{boot_id="boot-id-test",machine_id="machine-id-test",node_id="1",system_uuid="system-uuid-test",target_node_id="0"} 12 1395066363000
+machine_node_distance{boot_id="boot-id-test",machine_id="machine-id-test",node_id="1",system_uuid="system-uuid-test",target_node_id="1"} 10 1395066363000
 # HELP machine_node_hugepages_count Numer of hugepages assigned to NUMA node.
 # TYPE machine_node_hugepages_count gauge
 machine_node_hugepages_count{boot_id="boot-id-test",machine_id="machine-id-test",node_id="0",page_size="1048576",system_uuid="system-uuid-test"} 0 1395066363000
@@ -65,6 +71,9 @@ machine_nvm_capacity{boot_id="boot-id-test",machine_id="machine-id-test",mode="m
 # HELP machine_scrape_error 1 if there was an error while getting machine metrics, 0 otherwise.
 # TYPE machine_scrape_error gauge
 machine_scrape_error 0
+# HELP machine_swap_bytes Amount of swap memory available on the machine.
+# TYPE machine_swap_bytes gauge
+machine_swap_bytes{boot_id="boot-id-test",machine_id="machine-id-test",system_uuid="system-uuid-test"} 0 1395066363000
 # HELP machine_thread_siblings_count Number of CPU thread siblings.
 # TYPE machine_thread_siblings_count gauge
 machine_thread_siblings_count{boot_id="boot-id-test",core_id="0",machine_id="machine-id-test",node_id="0",system_uuid="system-uuid-test",thread_id="0"} 2 1395066363000

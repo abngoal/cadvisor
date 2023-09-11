@@ -16,7 +16,7 @@ package metrics
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -46,7 +46,7 @@ func TestPrometheusMachineCollector(t *testing.T) {
 	}
 	collectedMetrics := metricBuffer.String()
 
-	expectedMetrics, err := ioutil.ReadFile(machineMetricsFile)
+	expectedMetrics, err := os.ReadFile(machineMetricsFile)
 	assert.Nil(t, err)
 	assert.Equal(t, string(expectedMetrics), collectedMetrics)
 }
@@ -69,7 +69,7 @@ func TestPrometheusMachineCollectorWithFailure(t *testing.T) {
 		assert.Nil(t, err)
 	}
 	collectedMetrics := metricBuffer.String()
-	expectedMetrics, err := ioutil.ReadFile(machineMetricsFailureFile)
+	expectedMetrics, err := os.ReadFile(machineMetricsFailureFile)
 	assert.Nil(t, err)
 	assert.Equal(t, string(expectedMetrics), collectedMetrics)
 }
@@ -184,6 +184,22 @@ func TestGetHugePagesCount(t *testing.T) {
 		{value: 0, labels: []string{"0", "2048"}, timestamp: time.Unix(1395066363, 0)},
 		{value: 2, labels: []string{"1", "1048576"}, timestamp: time.Unix(1395066363, 0)},
 		{value: 4, labels: []string{"1", "2048"}, timestamp: time.Unix(1395066363, 0)},
+	}
+	assertMetricValues(t, expectedMetricVals, metricVals, "Unexpected information about Node memory")
+}
+
+func TestGetDistance(t *testing.T) {
+	machineInfo, err := testSubcontainersInfoProvider{}.GetMachineInfo()
+	assert.Nil(t, err)
+
+	metricVals := getDistance(machineInfo)
+
+	assert.Equal(t, 4, len(metricVals))
+	expectedMetricVals := []metricValue{
+		{value: 10, labels: []string{"0", "0"}, timestamp: time.Unix(1395066363, 0)},
+		{value: 12, labels: []string{"0", "1"}, timestamp: time.Unix(1395066363, 0)},
+		{value: 12, labels: []string{"1", "0"}, timestamp: time.Unix(1395066363, 0)},
+		{value: 10, labels: []string{"1", "1"}, timestamp: time.Unix(1395066363, 0)},
 	}
 	assertMetricValues(t, expectedMetricVals, metricVals, "Unexpected information about Node memory")
 }
